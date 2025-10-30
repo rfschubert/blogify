@@ -1,17 +1,21 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Post;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\Authentication;
 
 Route::get('/', function () {
-    return view('welcome');
+return view('welcome');
 })->name('home');
 
-Route::get('/posts', [Post::class, 'index'])->name('posts.index');
+Route::middleware(['auth'])->group(function () {
+    Route::resource('posts', PostController::class);
+    Route::get('/import/posts', [PostController::class, 'importForm'])->name('posts.import.form');
+    Route::post('/import/posts', [PostController::class, 'import'])->name('posts.import');
+});
+
 Route::get('/login', [Authentication::class, 'login'])->name('login');
 Route::post('/login', [Authentication::class, 'login'])->name('login.post');
 Route::post('/logout', [Authentication::class, 'logout'])->name('logout');
 Route::get('/register', [Authentication::class, 'register'])->name('register');
 Route::post('/register', [Authentication::class, 'register'])->name('register');
-Route::get('/users', [Authentication::class, 'list_users'])->name('users.list');

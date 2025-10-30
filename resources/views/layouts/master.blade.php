@@ -50,11 +50,6 @@
                             </a>
                         </li>
                     @endauth
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('users.list') }}">
-                            Users
-                        </a>
-                    </li>
                 </ul>
             </div>
         </div>

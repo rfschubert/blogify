@@ -50,12 +50,6 @@ class Authentication extends Controller
         return redirect()->route('home');
     }
 
-    public function list_users()
-    {
-        $users = User::all();
-        return view('auth.users', ['users' => $users]);
-    }
-
     public function logout(Request $request)
     {
         Auth::logout();
