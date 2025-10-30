@@ -18,6 +18,32 @@ The `PostImporter` abstract class defines a standardized interface for importing
 2. Implement the `import(int $id)` method to fetch and transform data from the new API.
 3. Add the new provider to `ExternalPostImporter::getProviders()` and `ExternalPostImporter::load()` for integration.
 
+Sample code, it's very easy to add new integrations using a standard interface, the system itself do not need any other updates.
+
+```php
+class FakeStoreImporter extends PostImporter
+{
+    public function import(int $id): Post
+    {
+        $response = Http::get("https://fakestoreapi.com/products/{$id}");
+
+        if ($response->failed()) {
+            throw new \Exception('Failed to fetch product from FakeStore');
+        }
+
+        $data = $response->json();
+
+        return $this->savePost([
+            'title' => $data['title'],
+            'content' => $data['description'],
+            'source' => 'fakestore',
+            'external_id' => $data['id'],
+            'status' => 'published', // or 'draft'
+        ]);
+    }
+}
+```
+
 ---
 
 ## **Objective**
