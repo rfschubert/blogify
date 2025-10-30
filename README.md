@@ -4,6 +4,20 @@
 
 ### Blog Platform with Content Importer
 
+### **Implementation Overview**
+
+The `PostImporter` abstract class defines a standardized interface for importing blog posts from external APIs. It includes an abstract `import(int $id): Post` method that must be implemented by concrete classes, and a protected `savePost(array $data): Post` method that uses `Post::firstOrCreate` to save posts while preventing duplicates based on `external_id` and `source`.
+
+#### **How It Works**
+- Concrete implementations (e.g., `JsonPlaceholderImporter`, `FakeStoreImporter`) fetch data from their respective APIs, transform it into a consistent array format (`title`, `content`, `status`, `source`, `external_id`), and call `savePost()` to persist the data.
+- Imported posts are saved as drafts by default.
+- The `ExternalPostImporter` class acts as a factory, providing a list of available providers via `getProviders()` and instantiating the appropriate importer via `load(string $provider)`.
+
+#### **Adding a New API Source**
+1. Create a new class extending `PostImporter`.
+2. Implement the `import(int $id)` method to fetch and transform data from the new API.
+3. Add the new provider to `ExternalPostImporter::getProviders()` and `ExternalPostImporter::load()` for integration.
+
 ---
 
 ## **Objective**
